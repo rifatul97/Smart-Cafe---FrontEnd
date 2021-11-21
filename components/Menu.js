@@ -13,8 +13,16 @@ export default function Menu(props) {
   const [productSelected, setProductSelected] = useState([]);
   const [userCart, setUserCart] = useState([]);
   const [updated, setUpdated] = useState(true);
+  const token = localStorage.getItem('user_token');
+
 
   let categories = getCategories();
+
+  if ( token !== null) {
+    console.log("hhhhhee")
+    console.log(token)
+  }
+  
 
   let [searchParams, setSearchParams] = useSearchParams({ replace: true });
 
@@ -32,13 +40,14 @@ export default function Menu(props) {
   };
 
   useEffect(() => {
-    console.log("hellooo")
-    axios.get(getUserCartEndpoint).then(async (res) => {
-      console.log("hell0")
-      console.log(res);
-      setUserCart(res)
-    });
-    
+    console.log((localStorage.getItem["user_token"]))
+    if (token !== null) {
+      axios.get(getUserCartEndpoint, token).then(async (res) => {
+        console.log('hell0');
+        console.log(res);
+        setUserCart(res);
+      });
+    }
   }, [userCart]);
 
   useEffect(() => {

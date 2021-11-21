@@ -26,9 +26,10 @@ function Login({ setToken }) {
             var token = res.data.access_token;
             var decoded = jwt_decode(token);
             console.log("decoded " + JSON.stringify(decoded));
-            localStorage.setItem('user_token_decoded', JSON.stringify(decoded));
-            localStorage.setItem('user_token', token);
+            localStorage.setItem("user_token_decoded", JSON.stringify(decoded));
+            localStorage.setItem("user_token", token);
             setToken(JSON.stringify(decoded));
+            
             
             navigate('/home')
           }
