@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import destr from 'destr';
 import { useSearchParams } from 'react-router-dom';
 import { getCategories } from '../src/Data.jsx';
-import { Card, ImageHeader, CardBody, CardFooter } from 'react-simple-card';
-import jwt_decode from 'jwt-decode';
 
 import axios from 'axios';
 
 const productEndpoint = 'http://localhost:8080/api/product/category/';
-const getUserCartEndpoint = 'http://localhost:8080/api/cart/user/2/list';
+const getUserCartEndpoint = 'http://localhost:8080/api/cart/user/list';
 
 export default function Menu(props) {
   const [categorySelected, setCategorySelected] = useState(1);
@@ -35,11 +32,22 @@ export default function Menu(props) {
   };
 
   useEffect(() => {
+    console.log("hellooo")
+    axios.get(getUserCartEndpoint).then(async (res) => {
+      console.log("hell0")
+      console.log(res);
+      setUserCart(res)
+    });
+    
+  }, [userCart]);
+
+  useEffect(() => {
     fetchProducts();
   }, [categorySelected]);
 
   useEffect(() => {
     axios.get();
+    console.log('axios.get() is used,');
   }, [productSelected]);
 
   useEffect(() => {

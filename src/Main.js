@@ -3,21 +3,12 @@ import Login from '../components/Login.js';
 import Logout from '../components/Logout.js';
 import TopNavBar from '../components/TopNavBar.js';
 import Contact from '../components/Contact.js';
-import NoPageFound from '../components/NoPageFound.js';
 import Home from '../components/Home.js';
 import Dashboard from '../components/Dashboard.js'
-import App from './App.js';
 import UserPage from '../components/UserPage.js';
 import Menu from '../components/Menu.js';
-import { RouteObject } from "react-router-dom";
-import ProductIndex from '../components/ProductIndex.js'
 import {
-  BrowserRouter,
-  Router,
-  Switch,
-  useRoutes,
   Route,
-  Link,
   Routes,
 } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
