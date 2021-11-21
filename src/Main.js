@@ -18,6 +18,15 @@ export default function Main() {
   const [user, setUser] = useState([]);
   const [token, setToken] = useState();
   const navigate = useNavigate();
+  const getToken = localStorage.getItem('user_token');
+
+  useEffect(() => {
+    console.log("main 1")
+    if(getToken != null) {
+      console.log("main 2.")
+      setToken(token)
+    } 
+  }, token)
 
   return (
     <Routes>

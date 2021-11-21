@@ -40,7 +40,6 @@ export default function Menu(props) {
   };
 
   useEffect(() => {
-    console.log((localStorage.getItem["user_token"]))
     if (token !== null) {
       axios.get(getUserCartEndpoint, token).then(async (res) => {
         console.log('hell0');

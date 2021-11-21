@@ -2,6 +2,8 @@ import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 
 function TopNavBar(props) {
+  const curtoken = props.token;
+
   const renderSwitch = (param) => {
     console.log(param);
     if (param.includes('ROLE_ADMIN')) {
@@ -24,7 +26,7 @@ function TopNavBar(props) {
       <nav style={{ borderBottom: 'solid 1px', paddingBottom: '1rem' }}>
         <Link to="/home">Home</Link> | <Link to="/menu">Menu</Link> |{' '}
         {check !== '' ? renderSwitch(check()) : ''}|{' '}
-        {props.token !== undefined ? (
+        {props.token !== '' ? (
           <Link to="/logout">Logout</Link>
         ) : (
           <Link to="/login">Login</Link>
