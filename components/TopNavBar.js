@@ -2,7 +2,8 @@ import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 
 function TopNavBar(props) {
-  const curtoken = props.token;
+  const token = localStorage.getItem('user_token');
+  console.log('props.token is a ' + token);
 
   const renderSwitch = (param) => {
     console.log(param);
@@ -25,16 +26,25 @@ function TopNavBar(props) {
       <h1>Smart Cafe</h1>
       <nav style={{ borderBottom: 'solid 1px', paddingBottom: '1rem' }}>
         <Link to="/home">Home</Link> | <Link to="/menu">Menu</Link> |{' '}
-        {check !== '' ? renderSwitch(check()) : ''}|{' '}
-        {props.token !== '' ? (
-          <Link to="/logout">Logout</Link>
-        ) : (
-          <Link to="/login">Login</Link>
-        )}
+        {check !== '' ? renderSwitch(check()) : ''}| {renderLog(token)}
       </nav>
       <Outlet />
     </div>
   );
+}
+
+function renderLog(token) {
+  console.log('props.token = ' + token);
+  switch (token) {
+    case '':
+      return <Link to="/login">Login</Link>;
+    case undefined:
+      return <Link to="/login">Login</Link>;
+    case null:
+      return <Link to="/login">Login</Link>;
+    default:
+      return <Link to="/logout">Logout</Link>;
+  }
 }
 
 export default TopNavBar;
