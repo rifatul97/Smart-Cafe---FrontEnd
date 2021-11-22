@@ -61,14 +61,14 @@ export default function Menu(props) {
       return (
         <div>
           <input type="text" value={quantity} onChange={onChangeQuantity} />{' '}
-          <button>add to cart</button>
+          <button onClick={() => addProductToUserCart()}>add to cart</button>
         </div>
       );
     } else {
       return (
         <div>
-          <input type="text" value={quantity} onChange={onChangeQuantity} />{' '}
-          <button>remove </button>
+          <input type="text" value={quantity} onChange={onChangeQuantity} />{' '}<button onClick={() => updateCartItem()}>update</button><br />
+          <button onClick={() => removeCartItem()}>remove</button>
         </div>
       );
     }
