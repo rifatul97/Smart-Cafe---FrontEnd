@@ -25,7 +25,7 @@ function Login({ setToken }) {
           if (res.status == 200) {
             var token = res.data.access_token;
             var decoded = jwt_decode(token);
-            console.log("decoded " + JSON.stringify(decoded));
+            //console.log("decoded " + JSON.stringify(decoded));
             localStorage.setItem("user_token_decoded", JSON.stringify(decoded));
             localStorage.setItem("user_token", token);
             setToken(JSON.stringify(decoded));

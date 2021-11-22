@@ -3,10 +3,10 @@ import { Outlet, Link } from 'react-router-dom';
 
 function TopNavBar(props) {
   const token = localStorage.getItem('user_token');
-  console.log('props.token is a ' + token);
+  //console.log('props.token is a ' + token);
 
   const renderSwitch = (param) => {
-    console.log(param);
+    //console.log(param);
     if (param.includes('ROLE_ADMIN')) {
       return <Link to="/dashboard">Dashboard </Link>;
     }
@@ -34,7 +34,7 @@ function TopNavBar(props) {
 }
 
 function renderLog(token) {
-  console.log('props.token = ' + token);
+  //console.log('props.token = ' + token);
   switch (token) {
     case '':
       return <Link to="/login">Login</Link>;

@@ -12,17 +12,13 @@ export default function Menu(props) {
   const [products, setProducts] = useState([]);
   const [productSelected, setProductSelected] = useState([]);
   const [userCart, setUserCart] = useState([]);
-  const [updated, setUpdated] = useState(true);
+  const [updated, setUpdated] = useState(false);
   const token = localStorage.getItem('user_token');
-
+  const [quantity, setQuantity] = useState(0);
+  const [userCartItemId, setUserCartItemId] = useState([]);
+  const [userCartId, setUserCartId] = useState([])
 
   let categories = getCategories();
-
-  if ( token !== null) {
-    console.log("hhhhhee")
-    console.log(token)
-  }
-  
 
   let [searchParams, setSearchParams] = useSearchParams({ replace: true });
 
@@ -39,30 +35,72 @@ export default function Menu(props) {
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    if (token !== null) {
-      axios.get(getUserCartEndpoint, token).then(async (res) => {
-        console.log('hell0');
-        console.log(res);
-        setUserCart(res);
-      });
+  const onChangeQuantity = (event) => {
+    setQuantity(event.target.value);
+  };
+
+  function renderCart() {
+    if (productSelected !== []) {
+      return (
+        <div className="box3">
+          <p>hello {productSelected.name}</p>
+          {productSelected.id >= 1 ? renderChoice() : <p>oh.</p>}
+        </div>
+      );
+    } else {
     }
-  }, [userCart]);
+  }
+
+  function renderChoice() {
+    if (userCartItemId == -1) {
+      return (
+        <div>
+          <input type="text" value={quantity} onChange={onChangeQuantity} />{' '}
+          <button>add to cart</button>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <input type="text" value={quantity} onChange={onChangeQuantity} />{' '}
+          <button>remove </button>
+        </div>
+      );
+    }
+  }
 
   useEffect(() => {
     fetchProducts();
   }, [categorySelected]);
 
   useEffect(() => {
-    axios.get();
-    console.log('axios.get() is used,');
+    if (userCart !== undefined) {
+      setUserCartItemId(-1);
+      setQuantity(0);
+      for (let [key, value] of Object.entries(userCart)) {
+        setUserCartId(key);
+        for (var val of value) {
+          if (val.productId === productSelected.id) {
+            setQuantity(val.quantity);
+            setUserCartItemId(val.cartItemId);
+            break;
+          }
+        }
+      }
+    }
   }, [productSelected]);
 
   useEffect(() => {
-    axios.get(getUserCartEndpoint).then(async (res) => {
-      setUserCart(res.data);
-    });
-    setUpdated(false);
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+
+    if (token !== null) {
+      axios.get(getUserCartEndpoint, config).then((res) => {
+        setUserCart(res.data);
+        setUpdated(true);
+      });
+    }
   }, [updated]);
 
   return (
@@ -121,19 +159,8 @@ export default function Menu(props) {
           </div>
         </div>
 
-        {renderCart(productSelected)}
+        {renderCart()}
       </div>
     </div>
   );
-}
-
-function renderCart(product) {
-  if (product !== []) {
-    return (
-      <div className="box3">
-        <p>hello {product.name}</p>
-      </div>
-    );
-  } else {
-  }
 }
