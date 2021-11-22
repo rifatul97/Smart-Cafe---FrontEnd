@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:8080/api/';
 const productEndpoint = BASE_URL + 'product/category/';
-const productSearchNameEndpoint = BASE_URL + 'product/search'
+const productSearchNameEndpoint = BASE_URL + 'product/search';
 const getUserCartEndpoint = BASE_URL + 'cart/user/list';
 const addProductToCartEndpoint = BASE_URL + 'cart/add';
 const updateCartItemEndpoint = BASE_URL + 'cart/update';
@@ -21,7 +21,7 @@ export default function Menu(props) {
   const token = localStorage.getItem('user_token');
   const [quantity, setQuantity] = useState(0);
   const [userCartItemId, setUserCartItemId] = useState([]);
-  const [userCartId, setUserCartId] = useState([])
+  const [userCartId, setUserCartId] = useState([]);
 
   let categories = getCategories();
 
@@ -56,6 +56,47 @@ export default function Menu(props) {
     }
   }
 
+  function addProductToCartEndpoint() {
+    const params = {
+      userCartId: userCartId,
+      productId: productId,
+      quantity: quantity,
+    };
+
+    axios
+      .post(addProductToCartEndpoint, params)
+      .then(async (res) => {
+        console.log('done with success!!');
+        setUpdated(true);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function updateCartItem() {
+    const params = {
+      userCartItemId: userCartItemId,
+      quantity: quantity,
+    };
+
+    axios
+      .post(updateCartItem, params)
+      .then(async (res) => {
+        console.log('update with success!!');
+        setUpdated(true);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function removeCartItem() {
+    axios
+      .delete(removeCartItem, { params: { id: prod } })
+      .then(async (res) => {
+        console.log('removed with success!!');
+        setUpdated(true);
+      })
+      .catch((err) => console.log(err));
+  }
+
   function renderChoice() {
     if (userCartItemId == -1) {
       return (
@@ -67,7 +108,9 @@ export default function Menu(props) {
     } else {
       return (
         <div>
-          <input type="text" value={quantity} onChange={onChangeQuantity} />{' '}<button onClick={() => updateCartItem()}>update</button><br />
+          <input type="text" value={quantity} onChange={onChangeQuantity} />{' '}
+          <button onClick={() => updateCartItem()}>update</button>
+          <br />
           <button onClick={() => removeCartItem()}>remove</button>
         </div>
       );
