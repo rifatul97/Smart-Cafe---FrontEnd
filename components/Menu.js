@@ -4,8 +4,13 @@ import { getCategories } from '../src/Data.jsx';
 
 import axios from 'axios';
 
-const productEndpoint = 'http://localhost:8080/api/product/category/';
-const getUserCartEndpoint = 'http://localhost:8080/api/cart/user/list';
+const BASE_URL = 'http://localhost:8080/api/';
+const productEndpoint = BASE_URL + 'product/category/';
+const productSearchNameEndpoint = BASE_URL + 'product/search'
+const getUserCartEndpoint = BASE_URL + 'cart/user/list';
+const addProductToCartEndpoint = BASE_URL + 'cart/add';
+const updateCartItemEndpoint = BASE_URL + 'cart/update';
+const removeCartItemEndpoint = BASE_URL + 'cart/remove';
 
 export default function Menu(props) {
   const [categorySelected, setCategorySelected] = useState(1);
