@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getCategories } from '../src/Data.jsx';
 //import 'antd/dist/antd.css';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
+import Stack from '@mui/material/Stack';
+import EditIcon from '@mui/icons-material/Edit';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
@@ -75,10 +78,10 @@ export default function Menu(props) {
     }
   }
 
-  function addProductToCartEndpoint() {
+  function addProductToCart() {
     const params = {
       userCartId: userCartId,
-      productId: productId,
+      productId: productSelected.id,
       quantity: quantity,
     };
 
@@ -89,6 +92,8 @@ export default function Menu(props) {
         setUpdated(true);
       })
       .catch((err) => console.log(err));
+
+      setOpen(false)
   }
 
   function updateCartItem() {
@@ -102,6 +107,7 @@ export default function Menu(props) {
       .then(async (res) => {
         console.log('update with success!!');
         setUpdated(true);
+        setOpen(false)
       })
       .catch((err) => console.log(err));
   }
@@ -114,8 +120,11 @@ export default function Menu(props) {
         console.log('removed with success!!');
         //setQuantity(0)
         setUpdated(true);
+        setOpen(false)
+        
       })
       .catch((err) => console.log(err));
+      setOpen(false)
   }
 
   function renderChoice() {
@@ -123,16 +132,25 @@ export default function Menu(props) {
       return (
         <div>
           <input type="text" value={quantity} onChange={onChangeQuantity} />{' '}
-          <button onClick={() => addProductToUserCart()}>add to cart</button>
+          <Button onClick={() => addProductToCart()}>add to cart</Button>
         </div>
       );
     } else {
       return (
         <div>
-          <input type="text" value={quantity} onChange={onChangeQuantity} />{' '}
-          <button onClick={() => updateCartItem()}>update</button>
-          <br />
-          <button onClick={() => removeCartItem()}>remove</button>
+          <Stack direction="row" spacing={2}>
+          <input type="text" value={quantity} onChange={onChangeQuantity} />
+            <Button variant="contained" onClick={() => updateCartItem()} endIcon={<EditIcon />}>
+              Edit
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<DeleteIcon />}
+              onClick={() => removeCartItem()}
+            >
+              Remove
+            </Button>
+          </Stack>
         </div>
       );
     }
@@ -173,8 +191,8 @@ export default function Menu(props) {
 
   const handleclick = (val) => {
     setProductSelected(val);
-    setOpen(true)
-    console.log("wooo")
+    setOpen(true);
+    console.log('wooo');
   };
 
   useEffect(() => {
@@ -272,7 +290,7 @@ export default function Menu(props) {
                       id="transition-modal-description"
                       sx={{ mt: 2 }}
                     >
-                      {productSelected.id >= 1 ? renderChoice() : <p>oh.</p>}
+                      {productSelected.id >= 1 ? renderChoice() : <p></p>}
                     </Typography>
                   </Box>
                 </Fade>
