@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Logout({setToken}) {
+function Logout(props) {
   const navigate = useNavigate();
 
   const removeToken = () => {
     localStorage.removeItem('user_token')
     localStorage.removeItem('user_token_decoded')
-    setToken()
+    props.setCanCheckOut(false)
+    props.setToken()
     navigate('/home')
   }
 
   return (
     <div>
-      {removeToken(setToken)}
+      {removeToken(props)}
     </div>
   );
 }

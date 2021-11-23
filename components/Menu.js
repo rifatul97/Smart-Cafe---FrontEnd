@@ -146,6 +146,10 @@ export default function Menu(props) {
     if (token !== null) {
       axios.get(getUserCartEndpoint, config).then((res) => {
         setUserCart(res.data);
+
+        console.log(res.data)
+        props.setCanCheckOut(true)
+
         setUpdated(true);
       });
     }

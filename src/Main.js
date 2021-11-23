@@ -17,6 +17,7 @@ export default function Main() {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState([]);
   const [token, setToken] = useState();
+  const [canCheckOut, setCanCheckOut] = useState('false')
   const navigate = useNavigate();
   const getToken = localStorage.getItem('user_token');
 
@@ -28,14 +29,14 @@ export default function Main() {
 
   return (
     <Routes>
-        <Route path="/" element={<TopNavBar token={token}/>}>
+        <Route path="/" element={<TopNavBar token={token} canCheckOut={canCheckOut}/>}>
         <Route index element={<Home />} />
         <Route path="home" element={<Home />} />
         <Route path="login" element={<Login setToken={setToken} setUser={setUser}/>} />
         <Route path="user" element={<UserPage />} />
-        <Route path="menu" element={<Menu token={token}/>} />
+        <Route path="menu" element={<Menu token={token} setCanCheckOut={setCanCheckOut}/>} />
         <Route path="contact" element={<Contact />} />
-        <Route path="logout" element={<Logout setToken={setToken}/>} />
+        <Route path="logout" element={<Logout setToken={setToken} setCanCheckOut={setCanCheckOut}/>} />
         <Route path="dashboard" element={<Dashboard token={token}/>} />
         {/*<Route path="*" element={<NoPageFound />} />*/}
         </Route>

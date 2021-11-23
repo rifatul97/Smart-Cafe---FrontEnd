@@ -3,7 +3,8 @@ import { Outlet, Link } from 'react-router-dom';
 
 function TopNavBar(props) {
   const token = localStorage.getItem('user_token');
-  //console.log('props.token is a ' + token);
+  
+  
 
   const renderSwitch = (param) => {
     //console.log(param);
@@ -26,7 +27,7 @@ function TopNavBar(props) {
       <h1>Smart Cafe</h1>
       <nav style={{ borderBottom: 'solid 1px', paddingBottom: '1rem' }}>
         <Link to="/home">Home</Link> | <Link to="/menu">Menu</Link> |{' '}
-        {check !== '' ? renderSwitch(check()) : ''}| {renderLog(token)}
+        {check !== '' ? renderSwitch(check()) : ''}| {renderLog(token)} {props.canCheckOut ? '|' : ''} {props.canCheckOut ? <Link to="/checkout">Checkout</Link> : ''}
       </nav>
       <Outlet />
     </div>
