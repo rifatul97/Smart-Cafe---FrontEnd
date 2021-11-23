@@ -9,6 +9,7 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Stack from '@mui/material/Stack';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
@@ -93,7 +94,7 @@ export default function Menu(props) {
       })
       .catch((err) => console.log(err));
 
-      setOpen(false)
+    setOpen(false);
   }
 
   function updateCartItem() {
@@ -107,7 +108,7 @@ export default function Menu(props) {
       .then(async (res) => {
         console.log('update with success!!');
         setUpdated(true);
-        setOpen(false)
+        setOpen(false);
       })
       .catch((err) => console.log(err));
   }
@@ -120,11 +121,10 @@ export default function Menu(props) {
         console.log('removed with success!!');
         //setQuantity(0)
         setUpdated(true);
-        setOpen(false)
-        
+        setOpen(false);
       })
       .catch((err) => console.log(err));
-      setOpen(false)
+    setOpen(false);
   }
 
   function renderChoice() {
@@ -132,15 +132,21 @@ export default function Menu(props) {
       return (
         <div>
           <input type="text" value={quantity} onChange={onChangeQuantity} />{' '}
-          <Button onClick={() => addProductToCart()}>add to cart</Button>
+          <Button onClick={() => addProductToCart()} startIcon={<AddIcon />}>
+            add to cart
+          </Button>
         </div>
       );
     } else {
       return (
         <div>
           <Stack direction="row" spacing={2}>
-          <input type="text" value={quantity} onChange={onChangeQuantity} />
-            <Button variant="contained" onClick={() => updateCartItem()} endIcon={<EditIcon />}>
+            <input type="text" value={quantity} onChange={onChangeQuantity} />
+            <Button
+              variant="contained"
+              onClick={() => updateCartItem()}
+              endIcon={<EditIcon />}
+            >
               Edit
             </Button>
             <Button
@@ -188,6 +194,14 @@ export default function Menu(props) {
     boxShadow: 24,
     p: 4,
   };
+
+  function renderUserCartList() {
+    return (
+      <div>
+        <p>hey create account to track cart!</p>
+      </div>  
+    )
+  }
 
   const handleclick = (val) => {
     setProductSelected(val);
@@ -299,7 +313,9 @@ export default function Menu(props) {
           </div>
         </div>
 
-        {renderCart()}
+        <div className="box3">
+          {renderUserCartList()}
+          </div>;
       </div>
     </div>
   );
