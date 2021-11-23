@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getCategories } from '../src/Data.jsx';
 //import 'antd/dist/antd.css';
-import DeleteIcon from '@mui/icons-material/Delete';
+import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Stack from '@mui/material/Stack';
 import EditIcon from '@mui/icons-material/Edit';
-import AddIcon from '@mui/icons-material/Add';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
@@ -132,7 +133,10 @@ export default function Menu(props) {
       return (
         <div>
           <input type="text" value={quantity} onChange={onChangeQuantity} />{' '}
-          <Button onClick={() => addProductToCart()} startIcon={<AddIcon />}>
+          <Button
+            onClick={() => addProductToCart()}
+            startIcon={<AddShoppingCartIcon />}
+          >
             add to cart
           </Button>
         </div>
@@ -151,7 +155,7 @@ export default function Menu(props) {
             </Button>
             <Button
               variant="outlined"
-              startIcon={<DeleteIcon />}
+              startIcon={<RemoveShoppingCartIcon />}
               onClick={() => removeCartItem()}
             >
               Remove
@@ -199,8 +203,8 @@ export default function Menu(props) {
     return (
       <div>
         <p>hey create account to track cart!</p>
-      </div>  
-    )
+      </div>
+    );
   }
 
   const handleclick = (val) => {
@@ -264,7 +268,6 @@ export default function Menu(props) {
               </a>
             ))}
         </nav>
-
         <div className="box2" key={categorySelected}>
           <div class="row">
             <div class="column">
@@ -312,10 +315,7 @@ export default function Menu(props) {
             </div>
           </div>
         </div>
-
-        <div className="box3">
-          {renderUserCartList()}
-          </div>;
+        <div className="box3">{renderUserCartList()}</div>;
       </div>
     </div>
   );
