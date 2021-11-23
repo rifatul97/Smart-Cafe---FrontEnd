@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getCategories } from '../src/Data.jsx';
+//import 'antd/dist/antd.css';
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 import axios from 'axios';
 
@@ -22,6 +29,23 @@ export default function Menu(props) {
   const [quantity, setQuantity] = useState(0);
   const [userCartItemId, setUserCartItemId] = useState([]);
   const [userCartId, setUserCartId] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const showModal = () => {
+    console.log('hll');
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   let categories = getCategories();
 
@@ -46,12 +70,7 @@ export default function Menu(props) {
 
   function renderCart() {
     if (productSelected !== []) {
-      return (
-        <div className="box3">
-          <p>hello {productSelected.name}</p>
-          {productSelected.id >= 1 ? renderChoice() : <p>oh.</p>}
-        </div>
-      );
+      return <div className="box3"></div>;
     } else {
     }
   }
@@ -140,6 +159,24 @@ export default function Menu(props) {
     }
   }, [productSelected]);
 
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
+  const handleclick = (val) => {
+    setProductSelected(val);
+    setOpen(true)
+    console.log("wooo")
+  };
+
   useEffect(() => {
     console.log('yes updating..');
     const config = {
@@ -202,7 +239,7 @@ export default function Menu(props) {
               {products.map((product) => (
                 <div
                   class="card"
-                  onClick={() => setProductSelected(product)}
+                  onClick={() => handleclick(product)}
                   key={product.id}
                 >
                   <h3>{product.name}</h3>
@@ -210,6 +247,36 @@ export default function Menu(props) {
                   <p>{product.price}</p>
                 </div>
               ))}
+
+              <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={open}
+                onClose={handleClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={open}>
+                  <Box sx={style}>
+                    <Typography
+                      id="transition-modal-title"
+                      variant="h6"
+                      component="h2"
+                    >
+                      {productSelected.name}
+                    </Typography>
+                    <Typography
+                      id="transition-modal-description"
+                      sx={{ mt: 2 }}
+                    >
+                      {productSelected.id >= 1 ? renderChoice() : <p>oh.</p>}
+                    </Typography>
+                  </Box>
+                </Fade>
+              </Modal>
             </div>
           </div>
         </div>
