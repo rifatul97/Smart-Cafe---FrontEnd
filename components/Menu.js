@@ -88,10 +88,12 @@ export default function Menu(props) {
   }
 
   function removeCartItem() {
+    console.log(userCartItemId);
     axios
-      .delete(removeCartItemEndpoint, { params: { cartId: cartItemId } })
+      .post(removeCartItemEndpoint, { params: { cartId: userCartItemId } })
       .then(async (res) => {
         console.log('removed with success!!');
+        //setQuantity(0)
         setUpdated(true);
       })
       .catch((err) => console.log(err));
@@ -139,7 +141,7 @@ export default function Menu(props) {
   }, [productSelected]);
 
   useEffect(() => {
-    console.log("yes updating..")
+    console.log('yes updating..');
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };

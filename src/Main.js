@@ -15,7 +15,7 @@ export default function Main() {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState([]);
   const [token, setToken] = useState();
-  const [canCheckOut, setCanCheckOut] = useState('false');
+  const [canCheckOut, setCanCheckOut] = useState(false);
   const navigate = useNavigate();
   const getToken = localStorage.getItem('user_token');
 
