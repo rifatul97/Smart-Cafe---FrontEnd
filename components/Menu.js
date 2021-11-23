@@ -7,6 +7,12 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import EditIcon from '@mui/icons-material/Edit';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -268,19 +274,38 @@ export default function Menu(props) {
               </a>
             ))}
         </nav>
-        <div className="box2" key={categorySelected}>
+        <div className="box2" key={categorySelected} style={{ borderRight: 'solid 1px', padding: '1rem' }}>
           <div class="row">
-            <div class="column">
+            <div class="column" style={{ 'flex-flow': 'row wrap', 'padding': '5px'}}>
               {products.map((product) => (
-                <div
-                  class="card"
+                <Card
+                  sx={{ display: 'flex'}}
                   onClick={() => handleclick(product)}
-                  key={product.id}
                 >
-                  <h3>{product.name}</h3>
-                  <br />
-                  <p>{product.price}</p>
-                </div>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <CardContent sx={{ flex: '1 0 auto' }}>
+                      <Stack direction="column" spacing={2}>
+                      <Typography component="div" variant="h5">
+                        {product.name}
+                      </Typography>
+
+                      <Typography
+                        variant="subtitle1"
+                        color="text.secondary"
+                        component="div"
+                      >
+                       <strong>$ {product.price} </strong>
+                      </Typography>
+                      </Stack>
+                    </CardContent>
+                  </Box>
+                  <CardMedia
+                    component="img"
+                    sx={{ width: 151 }}
+                    image="/static/images/cards/live-from-space.jpg"
+                    alt="Live from space album cover"
+                  />
+                </Card>
               ))}
 
               <Modal

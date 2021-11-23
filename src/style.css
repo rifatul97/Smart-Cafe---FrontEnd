@@ -18,28 +18,32 @@ strong.labelname {
 }
 
 * {
-  text-decoration:none;
+  text-decoration: none;
 }
 
-.container div{
+.container div {
   display: flex;
-  border: 1px #ccc solid
+  flex-wrap: wrap;
 }
 
 .box1 {
-  flex:1;
+  flex: 1;
 }
 .box2 {
-  flex:4;
-  justify-content: center;
+  display: flex;
+  align-items: space-between;
+  justify-content: space-between;
+  flex: 4;
   float: left;
   width: 25%;
   padding: 10px;
+  margin: 1px 1%;
 }
 
 /* Float four columns side by side */
 .column {
-  
+  padding: 10px;
+  flex-flow: row wrap;
 }
 
 /* Style the counter cards */
@@ -50,15 +54,7 @@ strong.labelname {
   background-color: #f1f1f1;
 }
 
-.product-image {
-  width: 120px;
-  height: 80px;
-}
-
 .box3 {
-  flex:2;
+  flex: 2;
   padding: 20px;
 }
-
-
-
