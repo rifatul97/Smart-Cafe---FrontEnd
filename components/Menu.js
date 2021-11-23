@@ -74,12 +74,12 @@ export default function Menu(props) {
 
   function updateCartItem() {
     const params = {
-      userCartItemId: userCartItemId,
+      cartId: userCartItemId,
       quantity: quantity,
     };
 
     axios
-      .post(updateCartItem, params)
+      .post(updateCartItemEndpoint, params)
       .then(async (res) => {
         console.log('update with success!!');
         setUpdated(true);
@@ -89,7 +89,7 @@ export default function Menu(props) {
 
   function removeCartItem() {
     axios
-      .delete(removeCartItem, { params: { id: prod } })
+      .delete(removeCartItemEndpoint, { params: { cartId: cartItemId } })
       .then(async (res) => {
         console.log('removed with success!!');
         setUpdated(true);
@@ -139,6 +139,7 @@ export default function Menu(props) {
   }, [productSelected]);
 
   useEffect(() => {
+    console.log("yes updating..")
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
@@ -147,10 +148,10 @@ export default function Menu(props) {
       axios.get(getUserCartEndpoint, config).then((res) => {
         setUserCart(res.data);
 
-        console.log(res.data)
-        props.setCanCheckOut(true)
+        console.log(res.data);
+        props.setCanCheckOut(true);
 
-        setUpdated(true);
+        setUpdated(false);
       });
     }
   }, [updated]);
