@@ -25,7 +25,7 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:8080/api/';
 const productEndpoint = BASE_URL + 'product/category/';
 const productSearchNameEndpoint = BASE_URL + 'product/search';
-const getUserCartEndpoint = BASE_URL + 'cart/user/list';
+const getUserCartEndpoint = BASE_URL + 'cart/user/';
 const addProductToCartEndpoint = BASE_URL + 'cart/add';
 const updateCartItemEndpoint = BASE_URL + 'cart/update';
 const removeCartItemEndpoint = BASE_URL + 'cart/remove';
@@ -47,7 +47,6 @@ export default function Menu(props) {
   const handleClose = () => setOpen(false);
 
   let categories = getCategories();
-  const token = localStorage.getItem("user_token")
   let [searchParams, setSearchParams] = useSearchParams({ replace: true });
 
   function onClicked(id) {
@@ -165,16 +164,17 @@ export default function Menu(props) {
   }, [categorySelected]);
 
   useEffect(() => {
-    if (userCart !== undefined) {
+    if (userCart.length !== 0) {
       setUserCartItemId(-1);
       setQuantity(0);
-      for (var val of usercart.dtos) {
-          if (val.productId === productSelected.id) {
-            setQuantity(val.quantity);
-            setUserCartItemId(val.cartItemId);
-            break;
-          }
-        
+      console.log(userCart.dtos);
+      for (var val of Object.entries(userCart.dtos)) {
+        console.log("val = " + val)
+        if (val.productId === productSelected.id) {
+          setQuantity(val.quantity);
+          setUserCartItemId(val.cartItemId);
+          break;
+        }
       }
     }
   }, [productSelected]);
@@ -192,26 +192,24 @@ export default function Menu(props) {
   };
 
   function renderUserCartList() {
-    if (usercart == null) {
+    if (userCart === []) {
       return (
         <div>
           <p>hey create account to track cart!</p>
         </div>
       );
-    } else if (usercart.status == "PENDING") {
+    } else if (userCart.status == 'PENDING') {
       return (
         <div>
           <p>thank you for ordering, you can still update/remove orders!</p>
         </div>
       );
-    } else if (usercart.status === "FULLFILLING"){
+    } else if (userCart.status === 'FULLFILLING') {
       <div>
-          <p>hang in there!, your order is in the works!</p>
-       </div> 
+        <p>hang in there!, your order is in the works!</p>
+      </div>;
     } else {
-      <div>
-          {userCartProductList}
-       </div> 
+      <div>{userCartProductList}</div>;
     }
   }
 
@@ -229,28 +227,24 @@ export default function Menu(props) {
 
     if (token !== null) {
       axios.get(getUserCartEndpoint, config).then((res) => {
-        setUserCart(res.data);
-        setUserCartId(usercart.usercartid);
-
-        console.log(res.data);
+        console.log("actually =" + JSON.parse(res.data))
+        setUserCart(JSON.stringify(res.data));
+        setUserCartId(JSON.stringify(res.data.usercartid));
         props.setCanCheckOut(true);
 
         setUpdated(false);
       });
 
-      const params = {
-        "usercartid" : userCartId,
-        "status": usercart.status
-      }
+      /*const params = {
+        usercartid: userCart.usercartid,
+        status: usercart.status,
+      };
 
       axios.get(getUserCartProductListEndpoint, config, params).then((res) => {
-        console.log("UserCartProductRequestDto is " + res)
-        setUserCartProductList(res.data)
-      })
+        console.log('UserCartProductRequestDto is ' + res);
+        setUserCartProductList(res.data);
+      });*/
     }
-
-
-
   }, [updated]);
 
   return (
@@ -290,28 +284,35 @@ export default function Menu(props) {
               </a>
             ))}
         </nav>
-        <div className="box2" key={categorySelected} style={{ borderRight: 'solid 1px', padding: '1rem' }}>
+        <div
+          className="box2"
+          key={categorySelected}
+          style={{ borderRight: 'solid 1px', padding: '1rem' }}
+        >
           <div class="row">
-            <div class="column" style={{ 'flex-flow': 'row wrap', 'padding': '5px'}}>
+            <div
+              class="column"
+              style={{ 'flex-flow': 'row wrap', padding: '5px' }}
+            >
               {products.map((product) => (
                 <Card
-                  sx={{ display: 'flex'}}
+                  sx={{ display: 'flex' }}
                   onClick={() => handleclick(product)}
                 >
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <CardContent sx={{ flex: '1 0 auto' }}>
                       <Stack direction="column" spacing={2}>
-                      <Typography component="div" variant="h5">
-                        {product.name}
-                      </Typography>
+                        <Typography component="div" variant="h5">
+                          {product.name}
+                        </Typography>
 
-                      <Typography
-                        variant="subtitle1"
-                        color="text.secondary"
-                        component="div"
-                      >
-                       <strong>$ {product.price} </strong>
-                      </Typography>
+                        <Typography
+                          variant="subtitle1"
+                          color="text.secondary"
+                          component="div"
+                        >
+                          <strong>$ {product.price} </strong>
+                        </Typography>
                       </Stack>
                     </CardContent>
                   </Box>
@@ -356,7 +357,10 @@ export default function Menu(props) {
             </div>
           </div>
         </div>
-        <div className="box3">{renderUserCartList()}</div>;
+        <div className="box3">
+          {userCart === undefined ? <p>undefined!!!</p> : renderUserCartList()}
+        </div>
+        ;
       </div>
     </div>
   );
