@@ -38,6 +38,7 @@ export default function Menu(props) {
   const [quantity, setQuantity] = useState(0);
   const [userCartItemId, setUserCartItemId] = useState([]);
   const [userCartId, setUserCartId] = useState([]);
+  const [userCartStatus, setUserCartStatus] = useState('');
   const [userCartProductList, setUserCartProductList] = useState([]);
   const [open, setOpen] = useState(false);
   let [searchParams, setSearchParams] = useSearchParams({ replace: true });
@@ -144,11 +145,14 @@ export default function Menu(props) {
     fetchProducts();
   }, [categorySelected]);
 
+  //x
   useEffect(() => {
     if (userCart.length !== 0) {
+      console.log("er = " + userCart);
       setUserCartItemId(-1);
       setQuantity(0);
-      console.log(JSON.parse(userCartProductList));
+      console.log(userCartProductList);
+      console.log(userCartProductList);
       for (var val in userCartProductList) {
         console.log('val = ' + val);
         if (val.productId === productSelected.id) {
@@ -173,24 +177,27 @@ export default function Menu(props) {
   };
 
   function renderUserCartList() {
-    if (userCart === []) {
+    console.log(userCartStatus);
+    if (userCartStatus === '') {
       return (
         <div>
           <p>hey create account to track cart!</p>
         </div>
       );
-    } else if (userCart.status == 'PENDING') {
+    } else if (userCartStatus == 'PENDING') {
       return (
         <div>
           <p>thank you for ordering, you can still update/remove orders!</p>
         </div>
       );
     } else if (userCart.status === 'FULLFILLING') {
-      <div>
-        <p>hang in there!, your order is in the works!</p>
-      </div>;
+      return (
+        <div>
+          <p>hang in there!, your order is in the works!</p>
+        </div>
+      );
     } else {
-      <p>-NEW CART-</p>;
+      return <p>-NEW CART-</p>;
       //<div>{userCartProductList}</div>;
     }
   }
@@ -207,12 +214,23 @@ export default function Menu(props) {
     };
 
     if (token !== null) {
-      axios.get(getUserCartEndpoint, config).then((res) => {
-        setUserCart(JSON.stringify(res.data));
-        setUserCartProductList(JSON.parse(res.data.dtos));
+      axios.get(getUserCartEndpoint, config).then(async (res) => {
+        setUserCart(res.data);
+        console.log(userCart);
+        setUserCartStatus(JSON.stringify(res.data.status));
+        let usercartdata = [];
+        for (var newdata of res.data.dtos) {
+          let w = [];
+          for (let [x, y] of Object.entries(newdata)) {
+            w[x] = y;
+          }
+          console.log(w);
+          usercartdata.push(w);
+        }
+        console.log(usercartdata)
+        setUserCartProductList(JSON.stringify(usercartdata));
         setUserCartId(JSON.stringify(res.data.usercartid));
-        props.setCanCheckOut(true);
-
+        console.log(userCartProductList);
         setUpdated(false);
       });
 
