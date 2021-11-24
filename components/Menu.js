@@ -23,7 +23,7 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:8080/api/';
 const productEndpoint = BASE_URL + 'product/category/';
 const productSearchNameEndpoint = BASE_URL + 'product/search';
-const getUserCartEndpoint = BASE_URL + 'cart/user/';
+const getUserCartEndpoint = BASE_URL + 'cart/user';
 const addProductToCartEndpoint = BASE_URL + 'cart/add';
 const updateCartItemEndpoint = BASE_URL + 'cart/update';
 const removeCartItemEndpoint = BASE_URL + 'cart/remove';
@@ -148,8 +148,8 @@ export default function Menu(props) {
     if (userCart.length !== 0) {
       setUserCartItemId(-1);
       setQuantity(0);
-      console.log(userCart.dtos);
-      for (var val of Object.entries(userCart.dtos)) {
+      console.log(JSON.parse(userCartProductList));
+      for (var val in userCartProductList) {
         console.log('val = ' + val);
         if (val.productId === productSelected.id) {
           setQuantity(val.quantity);
@@ -209,21 +209,22 @@ export default function Menu(props) {
     if (token !== null) {
       axios.get(getUserCartEndpoint, config).then((res) => {
         setUserCart(JSON.stringify(res.data));
+        setUserCartProductList(JSON.parse(res.data.dtos));
         setUserCartId(JSON.stringify(res.data.usercartid));
         props.setCanCheckOut(true);
 
         setUpdated(false);
       });
 
-      const params = {
-        usercartid: userCart.usercartid,
+      /*const params = {
+        usercartid: userCartId,
         status: usercart.status,
       };
 
       axios.get(getUserCartProductListEndpoint, config, params).then((res) => {
         console.log('UserCartProductRequestDto is ' + res);
         setUserCartProductList(res.data);
-      });*
+      });*/
     }
   }, [updated]);
 
