@@ -40,26 +40,14 @@ export default function Menu(props) {
   const [quantity, setQuantity] = useState(0);
   const [userCartItemId, setUserCartItemId] = useState([]);
   const [userCartId, setUserCartId] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [userCartProductList, setUserCartProductList] = useState([]);
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const showModal = () => {
-    console.log('hll');
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
   let categories = getCategories();
-
+  const token = localStorage.getItem("user_token")
   let [searchParams, setSearchParams] = useSearchParams({ replace: true });
 
   function onClicked(id) {
@@ -88,7 +76,7 @@ export default function Menu(props) {
 
   function addProductToCart() {
     const params = {
-      userCartId: userCartId,
+      userCartId: userCart.usercartid,
       productId: productSelected.id,
       quantity: quantity,
     };
@@ -106,7 +94,7 @@ export default function Menu(props) {
 
   function updateCartItem() {
     const params = {
-      cartId: userCartItemId,
+      cartId: userCart.usercartid,
       quantity: quantity,
     };
 
@@ -123,7 +111,7 @@ export default function Menu(props) {
   function removeCartItem() {
     console.log(userCartItemId);
     axios
-      .post(removeCartItemEndpoint, { params: { cartId: userCartItemId } })
+      .post(removeCartItemEndpoint, { params: { cartId: userCart.usercartid } })
       .then(async (res) => {
         console.log('removed with success!!');
         //setQuantity(0)
@@ -180,15 +168,13 @@ export default function Menu(props) {
     if (userCart !== undefined) {
       setUserCartItemId(-1);
       setQuantity(0);
-      for (let [key, value] of Object.entries(userCart)) {
-        setUserCartId(key);
-        for (var val of value) {
+      for (var val of usercart.dtos) {
           if (val.productId === productSelected.id) {
             setQuantity(val.quantity);
             setUserCartItemId(val.cartItemId);
             break;
           }
-        }
+        
       }
     }
   }, [productSelected]);
@@ -206,11 +192,27 @@ export default function Menu(props) {
   };
 
   function renderUserCartList() {
-    return (
+    if (usercart == null) {
+      return (
+        <div>
+          <p>hey create account to track cart!</p>
+        </div>
+      );
+    } else if (usercart.status == "PENDING") {
+      return (
+        <div>
+          <p>thank you for ordering, you can still update/remove orders!</p>
+        </div>
+      );
+    } else if (usercart.status === "FULLFILLING"){
       <div>
-        <p>hey create account to track cart!</p>
-      </div>
-    );
+          <p>hang in there!, your order is in the works!</p>
+       </div> 
+    } else {
+      <div>
+          {userCartProductList}
+       </div> 
+    }
   }
 
   const handleclick = (val) => {
@@ -228,13 +230,27 @@ export default function Menu(props) {
     if (token !== null) {
       axios.get(getUserCartEndpoint, config).then((res) => {
         setUserCart(res.data);
+        setUserCartId(usercart.usercartid);
 
         console.log(res.data);
         props.setCanCheckOut(true);
 
         setUpdated(false);
       });
+
+      const params = {
+        "usercartid" : userCartId,
+        "status": usercart.status
+      }
+
+      axios.get(getUserCartProductListEndpoint, config, params).then((res) => {
+        console.log("UserCartProductRequestDto is " + res)
+        setUserCartProductList(res.data)
+      })
     }
+
+
+
   }, [updated]);
 
   return (
