@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getCategories } from '../src/Data.jsx';
-//import 'antd/dist/antd.css';
 import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
@@ -41,13 +39,13 @@ export default function Menu(props) {
   const [userCartItemId, setUserCartItemId] = useState([]);
   const [userCartId, setUserCartId] = useState([]);
   const [userCartProductList, setUserCartProductList] = useState([]);
-
   const [open, setOpen] = useState(false);
+  let [searchParams, setSearchParams] = useSearchParams({ replace: true });
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   let categories = getCategories();
-  let [searchParams, setSearchParams] = useSearchParams({ replace: true });
 
   function onClicked(id) {
     setCategorySelected(id);
@@ -66,16 +64,9 @@ export default function Menu(props) {
     setQuantity(event.target.value);
   };
 
-  function renderCart() {
-    if (productSelected !== []) {
-      return <div className="box3"></div>;
-    } else {
-    }
-  }
-
   function addProductToCart() {
     const params = {
-      userCartId: userCart.usercartid,
+      userCartId: userCartId,
       productId: productSelected.id,
       quantity: quantity,
     };
@@ -93,29 +84,25 @@ export default function Menu(props) {
 
   function updateCartItem() {
     const params = {
-      cartId: userCart.usercartid,
+      cartId: userCartId,
       quantity: quantity,
     };
 
     axios
       .post(updateCartItemEndpoint, params)
       .then(async (res) => {
-        console.log('update with success!!');
         setUpdated(true);
-        setOpen(false);
       })
       .catch((err) => console.log(err));
+
+    setOpen(false);
   }
 
   function removeCartItem() {
-    console.log(userCartItemId);
     axios
-      .post(removeCartItemEndpoint, { params: { cartId: userCart.usercartid } })
+      .post(removeCartItemEndpoint, { params: { cartId: userCartItemId } })
       .then(async (res) => {
-        console.log('removed with success!!');
-        //setQuantity(0)
         setUpdated(true);
-        setOpen(false);
       })
       .catch((err) => console.log(err));
     setOpen(false);
@@ -129,9 +116,7 @@ export default function Menu(props) {
           <Button
             onClick={() => addProductToCart()}
             startIcon={<AddShoppingCartIcon />}
-          >
-            add to cart
-          </Button>
+          />
         </div>
       );
     } else {
@@ -143,16 +128,12 @@ export default function Menu(props) {
               variant="contained"
               onClick={() => updateCartItem()}
               endIcon={<EditIcon />}
-            >
-              Edit
-            </Button>
+            />
             <Button
               variant="outlined"
               startIcon={<RemoveShoppingCartIcon />}
               onClick={() => removeCartItem()}
-            >
-              Remove
-            </Button>
+            />
           </Stack>
         </div>
       );
@@ -169,7 +150,7 @@ export default function Menu(props) {
       setQuantity(0);
       console.log(userCart.dtos);
       for (var val of Object.entries(userCart.dtos)) {
-        console.log("val = " + val)
+        console.log('val = ' + val);
         if (val.productId === productSelected.id) {
           setQuantity(val.quantity);
           setUserCartItemId(val.cartItemId);
@@ -209,25 +190,24 @@ export default function Menu(props) {
         <p>hang in there!, your order is in the works!</p>
       </div>;
     } else {
-      <div>{userCartProductList}</div>;
+      <p>-NEW CART-</p>;
+      //<div>{userCartProductList}</div>;
     }
   }
 
-  const handleclick = (val) => {
+  const handleProductClickAction = (val) => {
     setProductSelected(val);
     setOpen(true);
-    console.log('wooo');
   };
 
+  ////
   useEffect(() => {
-    console.log('yes updating..');
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
 
     if (token !== null) {
       axios.get(getUserCartEndpoint, config).then((res) => {
-        console.log("actually =" + JSON.parse(res.data))
         setUserCart(JSON.stringify(res.data));
         setUserCartId(JSON.stringify(res.data.usercartid));
         props.setCanCheckOut(true);
@@ -235,7 +215,7 @@ export default function Menu(props) {
         setUpdated(false);
       });
 
-      /*const params = {
+      const params = {
         usercartid: userCart.usercartid,
         status: usercart.status,
       };
@@ -243,7 +223,7 @@ export default function Menu(props) {
       axios.get(getUserCartProductListEndpoint, config, params).then((res) => {
         console.log('UserCartProductRequestDto is ' + res);
         setUserCartProductList(res.data);
-      });*/
+      });*
     }
   }, [updated]);
 
@@ -297,7 +277,7 @@ export default function Menu(props) {
               {products.map((product) => (
                 <Card
                   sx={{ display: 'flex' }}
-                  onClick={() => handleclick(product)}
+                  onClick={() => handleProductClickAction(product)}
                 >
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <CardContent sx={{ flex: '1 0 auto' }}>
@@ -305,13 +285,14 @@ export default function Menu(props) {
                         <Typography component="div" variant="h5">
                           {product.name}
                         </Typography>
-
                         <Typography
-                          variant="subtitle1"
+                          variant="h6"
                           color="text.secondary"
                           component="div"
                         >
-                          <strong>$ {product.price} </strong>
+                          <strong style={{ 'font-size': '18px' }}>
+                            $ {product.price}{' '}
+                          </strong>
                         </Typography>
                       </Stack>
                     </CardContent>
@@ -319,8 +300,8 @@ export default function Menu(props) {
                   <CardMedia
                     component="img"
                     sx={{ width: 151 }}
-                    image="/static/images/cards/live-from-space.jpg"
-                    alt="Live from space album cover"
+                    image="https://www.qualitylogoproducts.com/images/_graphics/QuickShipBox.png?size=thumb_retina"
+                    //alt={product.name}
                   />
                 </Card>
               ))}
