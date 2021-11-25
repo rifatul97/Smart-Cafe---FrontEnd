@@ -22,6 +22,7 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:8080/api/';
 const productEndpoint = BASE_URL + 'product/category/';
+const getUserCartProductListEndpoint = BASE_URL + 'cart/user/list';
 const productSearchNameEndpoint = BASE_URL + 'product/search';
 const getUserCartEndpoint = BASE_URL + 'cart/user';
 const addProductToCartEndpoint = BASE_URL + 'cart/add';
@@ -33,7 +34,7 @@ export default function Menu(props) {
   const [products, setProducts] = useState([]);
   const [productSelected, setProductSelected] = useState([]);
   const [userCart, setUserCart] = useState([]);
-  const [userId, setUserId] = useState()
+  const [userId, setUserId] = useState();
   const [updated, setUpdated] = useState(false);
   const token = localStorage.getItem('user_token');
   const [quantity, setQuantity] = useState(0);
@@ -197,8 +198,14 @@ export default function Menu(props) {
         </div>
       );
     } else {
-      return <p>-NEW CART-</p>;
-      //<div>{userCartProductList}</div>;
+      console.log(products);
+      for (var cart of userCart) {
+        //products[1].name;
+      }
+      for (var product of products) {
+        //console.log(product);
+      }
+      return <div></div>;
     }
   }
 
@@ -219,9 +226,10 @@ export default function Menu(props) {
         console.log(res.data.status);
         st = res.data.status;
         setUserCart(JSON.parse(res.data.dtos));
-        setUserCartId(res.data.userCartId)
+        setUserCartId(res.data.userCartId);
         setUserCartStatus(res.data.status);
-        setUserId(res.data.userId)
+        setUserId(res.data.userId);
+
         for (var x of JSON.parse(res.data.dtos)) {
           console.log(x);
         }
@@ -229,15 +237,18 @@ export default function Menu(props) {
         setUpdated(false);
       });
 
-      /*const params = {
-        usercartid: userCartId,
-        status: usercart.status,
+      const configv = {
+        headers: { Authorization: `Bearer ${token}` },
+        params: {
+          usercartid: userCartId,
+          status: 'NEW',
+        },
       };
 
-      axios.get(getUserCartProductListEndpoint, config, params).then((res) => {
+      axios.get(getUserCartProductListEndpoint, configv).then((res) => {
         console.log('UserCartProductRequestDto is ' + res);
         setUserCartProductList(res.data);
-      });*/
+      });
     }
   }, [updated]);
 
