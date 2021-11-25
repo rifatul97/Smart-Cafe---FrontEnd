@@ -33,15 +33,17 @@ export default function Menu(props) {
   const [products, setProducts] = useState([]);
   const [productSelected, setProductSelected] = useState([]);
   const [userCart, setUserCart] = useState([]);
+  const [userId, setUserId] = useState()
   const [updated, setUpdated] = useState(false);
   const token = localStorage.getItem('user_token');
   const [quantity, setQuantity] = useState(0);
   const [userCartItemId, setUserCartItemId] = useState([]);
   const [userCartId, setUserCartId] = useState([]);
-  const [userCartStatus, setUserCartStatus] = useState('');
+  let [userCartStatus, setUserCartStatus] = useState('');
   const [userCartProductList, setUserCartProductList] = useState([]);
   const [open, setOpen] = useState(false);
   let [searchParams, setSearchParams] = useSearchParams({ replace: true });
+  let st = '';
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -148,12 +150,11 @@ export default function Menu(props) {
   //x
   useEffect(() => {
     if (userCart.length !== 0) {
-      console.log("er = " + userCart);
+      console.log('er = ' + userCart);
       setUserCartItemId(-1);
       setQuantity(0);
-      console.log(userCartProductList);
-      console.log(userCartProductList);
-      for (var val in userCartProductList) {
+      console.log(userCart);
+      for (var val of userCart) {
         console.log('val = ' + val);
         if (val.productId === productSelected.id) {
           setQuantity(val.quantity);
@@ -177,7 +178,6 @@ export default function Menu(props) {
   };
 
   function renderUserCartList() {
-    console.log(userCartStatus);
     if (userCartStatus === '') {
       return (
         <div>
@@ -215,22 +215,17 @@ export default function Menu(props) {
 
     if (token !== null) {
       axios.get(getUserCartEndpoint, config).then(async (res) => {
-        setUserCart(res.data);
-        console.log(userCart);
-        setUserCartStatus(JSON.stringify(res.data.status));
-        let usercartdata = [];
-        for (var newdata of res.data.dtos) {
-          let w = [];
-          for (let [x, y] of Object.entries(newdata)) {
-            w[x] = y;
-          }
-          console.log(w);
-          usercartdata.push(w);
+        console.log('res is ');
+        console.log(res.data.status);
+        st = res.data.status;
+        setUserCart(JSON.parse(res.data.dtos));
+        setUserCartId(res.data.userCartId)
+        setUserCartStatus(res.data.status);
+        setUserId(res.data.userId)
+        for (var x of JSON.parse(res.data.dtos)) {
+          console.log(x);
         }
-        console.log(usercartdata)
-        setUserCartProductList(JSON.stringify(usercartdata));
-        setUserCartId(JSON.stringify(res.data.usercartid));
-        console.log(userCartProductList);
+
         setUpdated(false);
       });
 
