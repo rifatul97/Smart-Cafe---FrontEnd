@@ -4,6 +4,7 @@ import { getCategories } from '../src/Data.jsx';
 import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
+import Checkout from './Checkout.js';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Card from '@mui/material/Card';
@@ -13,6 +14,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
+import { useNavigate } from 'react-router-dom';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import CardMedia from '@mui/material/CardMedia';
@@ -51,6 +53,7 @@ export default function Menu(props) {
   const [userCartProductList, setUserCartProductList] = useState([]);
   const [open, setOpen] = useState(false);
   let [searchParams, setSearchParams] = useSearchParams({ replace: true });
+  const navigate = useNavigate();
   let st = '';
 
   const handleOpen = () => setOpen(true);
@@ -206,36 +209,45 @@ export default function Menu(props) {
       );
     } else {
       console.log(products);
-      
+
       const rows = [];
 
-      
-      let ans = '';
       for (var cart of userCart) {
         for (var product of products) {
           if (cart.productId == product.id) {
             let name = JSON.stringify(product.name);
             let qt = JSON.stringify(cart.quantity);
-            row.push(createData(name, qt, (product.price * cart.quantity))))
+            rows.push(
+              createData(name, qt, Math.round(product.price * cart.quantity))
+            );
           }
         }
       }
 
-      return <div>{ans}</div>;
+      return (
+        <div class="border">
+          {createTable(rows)}
+          <Button
+            onClick={() => navigate('/home')}
+            startIcon={<ShoppingCartCheckoutIcon />}
+            class="d-block mr-0 ml-auto"
+          >
+            CheckOut
+          </Button>
+        </div>
+      );
     }
   }
 
-  export default function BasicTable() {
+  function createTable(rows) {
     return (
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align="right">Calories</TableCell>
-              <TableCell align="right">Fat&nbsp;(g)</TableCell>
-              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-              <TableCell align="right">Protein&nbsp;(g)</TableCell>
+              <TableCell>Product Name</TableCell>
+              <TableCell align="right">Amount</TableCell>
+              <TableCell align="right">Total Price</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -247,18 +259,20 @@ export default function Menu(props) {
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right">{row.protein}</TableCell>
+                <TableCell align="right">{row.quantity}</TableCell>
+                <TableCell align="right">{row.totalPrice}</TableCell>
               </TableRow>
             ))}
+            <TableCell component="th" scope="row">
+              overall
+            </TableCell>
+            <TableCell align="right"></TableCell>
+            <TableCell align="right">{100}</TableCell>
           </TableBody>
         </Table>
       </TableContainer>
     );
   }
-  
 
   function createData(name, quantity, totalPrice) {
     return { name, quantity, totalPrice };
@@ -277,32 +291,12 @@ export default function Menu(props) {
 
     if (token !== null) {
       axios.get(getUserCartEndpoint, config).then(async (res) => {
-        console.log('res is ');
-        console.log(res.data.status);
-        st = res.data.status;
         setUserCart(JSON.parse(res.data.dtos));
         setUserCartId(res.data.userCartId);
         setUserCartStatus(res.data.status);
         setUserId(res.data.userId);
-
-        for (var x of JSON.parse(res.data.dtos)) {
-          console.log(x);
-        }
-
         setUpdated(false);
-      });
-
-      const configv = {
-        headers: { Authorization: `Bearer ${token}` },
-        params: {
-          usercartid: userCartId,
-          status: 'NEW',
-        },
-      };
-
-      axios.get(getUserCartProductListEndpoint, configv).then((res) => {
-        console.log('UserCartProductRequestDto is ' + res);
-        setUserCartProductList(res.data);
+        renderUserCartList();
       });
     }
   }, [updated]);
@@ -350,6 +344,18 @@ export default function Menu(props) {
           style={{ borderRight: 'solid 1px', padding: '1rem' }}
         >
           <div class="row">
+            <div>
+              <strong>
+                Menu {'>'}
+                {categories.map((category) => {
+                  if (category.id == categorySelected.id) {
+                    console.log(category.name);
+                    return <p>{category.name}</p>;
+                  }
+                })}
+              </strong>
+            </div>
+            <br />
             <div
               class="column"
               style={{ 'flex-flow': 'row wrap', padding: '5px' }}
