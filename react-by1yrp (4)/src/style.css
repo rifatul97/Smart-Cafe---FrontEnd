@@ -1,0 +1,71 @@
+h1,
+p,
+nav,
+strong {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.topNavbar {
+  background-color: grey;
+  padding: 10px;
+}
+
+strong.labelname {
+  font-size: 20px;
+}
+
+.mr-0 {
+  margin-right: 0;
+}
+.ml-auto {
+  margin-left: auto;
+}
+.d-block {
+  display: block;
+}
+
+* {
+  text-decoration: none;
+}
+
+.container div {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.box1 {
+  flex: 1;
+}
+.box2 {
+  display: flex;
+  align-items: space-between;
+  justify-content: space-between;
+  flex: 4;
+  float: left;
+  width: 25%;
+  padding: 10px;
+  margin: 1px 1%;
+}
+
+/* Float four columns side by side */
+.column {
+  padding: 10px;
+  flex-flow: row wrap;
+}
+
+/* Style the counter cards */
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: #f1f1f1;
+}
+
+.box3 {
+  flex: 2;
+  padding: 20px;
+}
