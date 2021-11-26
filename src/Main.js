@@ -6,6 +6,7 @@ import Contact from '../components/Contact.js';
 import Home from '../components/Home.js';
 import Dashboard from '../components/Dashboard.js';
 import UserPage from '../components/UserPage.js';
+import Checkout from '../components/Checkout.js';
 import Menu from '../components/Menu.js';
 import NoPageFound from '../components/NoPageFound.js';
 import { Route, Routes } from 'react-router-dom';
@@ -50,8 +51,8 @@ export default function Main() {
           }
         />
         <Route path="dashboard" element={<Dashboard token={token} />} />
-        <Route path="checkout" element={<NoPageFound />} />
-        {/*<Route path="*" element={<NoPageFound />} />*/}
+        <Route path="checkout" element={<Checkout />} />
+        <Route path="*" element={<NoPageFound />} />
       </Route>
     </Routes>
   );

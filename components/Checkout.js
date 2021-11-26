@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 export default function CheckOut(props) {
   return (
     <div>
-      <p>hello world.</p>
+      <p>You have selected</p>
+      <ProductListTable rows={props.data}
     </div>
   );
 }

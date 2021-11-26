@@ -4,19 +4,12 @@ import { getCategories } from '../src/Data.jsx';
 import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
-import Checkout from './Checkout.js';
+import ProductListTable from './ProductListTable.js';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import { useNavigate } from 'react-router-dom';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -226,9 +219,9 @@ export default function Menu(props) {
 
       return (
         <div class="border">
-          {createTable(rows)}
+          <ProductListTable rows={rows} />
           <Button
-            onClick={() => navigate('/home')}
+            onClick={() => navigate('/checkout')}
             startIcon={<ShoppingCartCheckoutIcon />}
             class="d-block mr-0 ml-auto"
           >
@@ -237,41 +230,6 @@ export default function Menu(props) {
         </div>
       );
     }
-  }
-
-  function createTable(rows) {
-    return (
-      <TableContainer component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Product Name</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Total Price</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow
-                key={row.name}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {row.name}
-                </TableCell>
-                <TableCell align="right">{row.quantity}</TableCell>
-                <TableCell align="right">{row.totalPrice}</TableCell>
-              </TableRow>
-            ))}
-            <TableCell component="th" scope="row">
-              overall
-            </TableCell>
-            <TableCell align="right"></TableCell>
-            <TableCell align="right">{100}</TableCell>
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
   }
 
   function createData(name, quantity, totalPrice) {
