@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import Login from "../components/Login.js";
-import Logout from "../components/Logout.js";
-import TopNavBar from "../components/TopNavBar.js";
-import Contact from "../components/Contact.js";
-import Home from "../components/Home.js";
-import Dashboard from "../components/Dashboard.js";
-import UserPage from "../components/UserPage.js";
-import Checkout from "../components/Checkout.js";
-import Menu from "../components/Menu.js";
-import NoPageFound from "../components/NoPageFound.js";
-import { Route, Routes } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import Login from '../components/Login.js';
+import Logout from '../components/Logout.js';
+import TopNavBar from '../components/TopNavBar.js';
+import Contact from '../components/Contact.js';
+import Home from '../components/Home.js';
+import Dashboard from '../components/Dashboard.js';
+import UserPage from '../components/UserPage.js';
+import Checkout from '../components/Checkout.js';
+import Menu from '../components/Menu.js';
+import NoPageFound from '../components/NoPageFound.js';
+import { Route, Routes } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Main() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -19,11 +19,21 @@ export default function Main() {
   const [token, setToken] = useState();
   const [canCheckOut, setCanCheckOut] = useState(false);
   const navigate = useNavigate();
-  const getToken = localStorage.getItem("user_token");
+  const getToken = localStorage.getItem('user_token');
+  const getExp = localStorage.getItem('user_token_decoded');
 
   useEffect(() => {
-    if (getToken != null) {
-      setToken(token);
+    if (getExp !== null) {
+      getExp = JSON.parse(getExp);
+      var dateNow = new Date();
+      console.log('getExp.exp = ' + getExp.exp);
+      console.log('dateNow.getTime() = ' + dateNow.getTime());
+      if (getExp.exp < dateNow.getTime() / 1000) {
+        console.log('dang the token already expired!!');
+        localStorage.removeItem('user_token');
+        localStorage.removeItem('user_token_decoded');
+        setToken();
+      }
     }
   }, token);
 
